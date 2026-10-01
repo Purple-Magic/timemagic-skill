@@ -1,0 +1,14 @@
+{
+  "name": "timemagic-marketplace",
+  "owner": {
+    "name": "Purple Magic",
+    "url": "https://time-app.purple-magic.com"
+  },
+  "plugins": [
+    {
+      "name": "timemagic",
+      "source": "./",
+      "description": "Official TimeMagic skill for Claude Code."
+    }
+  ]
+}

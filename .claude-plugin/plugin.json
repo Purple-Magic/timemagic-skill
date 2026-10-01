@@ -1,0 +1,15 @@
+{
+  "name": "timemagic",
+  "displayName": "TimeMagic",
+  "description": "Official TimeMagic skill: lets Claude Code read and manage your TimeMagic projects, tasks, activities, goals, time entries, and reports via the TimeMagic API.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Purple Magic",
+    "url": "https://time-app.purple-magic.com"
+  },
+  "homepage": "https://github.com/purple-magic/timemagic-skill",
+  "repository": "https://github.com/purple-magic/timemagic-skill",
+  "license": "MIT",
+  "keywords": ["timemagic", "time-tracking", "productivity", "api"],
+  "skills": ["skills/timemagic"]
+}

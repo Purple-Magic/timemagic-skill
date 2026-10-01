@@ -1,0 +1,23 @@
+{
+  "skill": "timemagic",
+  "positive": [
+    "Show my active TimeMagic projects.",
+    "Create a task in my Website Redesign project.",
+    "What have I tracked today in TimeMagic?",
+    "Start tracking time on my 'Write report' task.",
+    "List my TimeMagic goals for this month.",
+    "Create a time entry for the activity I did yesterday.",
+    "Integrate this Rails app with the TimeMagic API.",
+    "Get my TimeMagic time entries for today.",
+    "Build a script that syncs TimeMagic tasks to a spreadsheet.",
+    "Stop tracking my current activity in TimeMagic."
+  ],
+  "negative": [
+    "Explain ActiveRecord callbacks.",
+    "Create a generic todo list app with React.",
+    "What time is it in Tokyo?",
+    "Write me a cron job to back up a Postgres database.",
+    "Help me plan my vacation itinerary.",
+    "Summarize this PDF for me."
+  ]
+}
