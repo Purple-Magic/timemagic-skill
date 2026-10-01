@@ -90,7 +90,7 @@ end
 
 # 6. No obvious secrets committed (API tokens, private keys, etc.)
 secret_patterns = [
-  /TIMEMAGIC_API_TOKEN\s*=\s*[^\s$'"#]{8,}/, # a literal token value, not just the env var name
+  /TIMEMAGIC_API_TOKEN\s*=\s*(?!["'$<]|your[-_]?token)[^\s$'"#<]{8,}/i, # a literal token value, not a placeholder
   /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
   /AKIA[0-9A-Z]{16}/ # AWS access key id shape
 ]
