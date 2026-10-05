@@ -42,6 +42,12 @@ phrasing implies a different period (e.g. "yesterday I worked 47 minutes on X").
 - "Start working on X" / "start tracking X": resolve X (see above), then start tracking.
   Tasks only support one tracking slot; if the account is already tracking two tasks (the
   server-enforced limit), tell the user instead of silently stopping something for them.
+- "Switch to X" / "stop Y and start X" / "work on X instead": use the `switch_tracking` event on
+  X directly, rather than issuing a separate `stop_tracking` on the old task followed by
+  `start_tracking` on the new one - it's one call and avoids a race where the old task's entry
+  and the new one briefly overlap or fail independently. It stops whichever task is currently
+  tracking (if any) and starts X. Only fall back to the manual two-call sequence for a project
+  with `allow_parallel_tasks` where the user explicitly wants both running at once.
 - "Stop tracking" / "I'm done with X for now" (not finished, just pausing): use the stop/pause
   event, not finish/complete - those are different and not interchangeable.
 - "I finished X" / "mark X done": use the complete/finish event. This ends any open time entry

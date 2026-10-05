@@ -26,7 +26,7 @@ their REST equivalent, for readers coming from one side or the other.
 | `get_task` | `GET /api/tasks/:uuid` |
 | `create_task` | `POST /api/projects/:project_id/tasks` |
 | `update_task` | `PUT /api/tasks/:uuid` |
-| `start_tracking` / `start_without_tracking` / `stop_tracking` / `complete_task` | `PUT /api/tasks/:uuid?event=start_tracking` / `start_without_tracking` / `stop_tracking` / `finish` |
+| `start_tracking` / `start_without_tracking` / `stop_tracking` / `switch_tracking` / `complete_task` | `PUT /api/tasks/:uuid?event=start_tracking` / `start_without_tracking` / `stop_tracking` / `switch_tracking` / `finish` |
 | `get_current_activity` | `GET /api/tasks/tracking` |
 | `list_activities` | `GET /api/activities` |
 | `create_activity` | `POST /api/activities` |

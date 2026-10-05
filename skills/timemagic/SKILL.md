@@ -43,7 +43,7 @@ Load only what you need for the task at hand:
 |---|---|
 | `references/authentication.md` | Token header, subscription gate, rate limits, getting/regenerating a token |
 | `references/projects.md` | Project CRUD, fields, `project_type` enum |
-| `references/tasks.md` | Task CRUD, nesting under projects, `tracking` endpoint, start/finish events, **known API bug** with unsupported events |
+| `references/tasks.md` | Task CRUD, nesting under projects, `tracking` endpoint, `start_tracking`/`start_without_tracking`/`stop_tracking`/`switch_tracking`/`finish` events |
 | `references/activities.md` | Activity CRUD, start/stop tracking events |
 | `references/goals.md` | Goal CRUD, user vs. project goals, **`begin_date` field correction** (not `month`) |
 | `references/time-entries.md` | Time entry CRUD, attaching to a task/activity |
