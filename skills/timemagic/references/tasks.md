@@ -29,9 +29,11 @@ Belong to a project. Drive time tracking via workflow events.
 | Event | Effect |
 |---|---|
 | `start_tracking` | `pending → in_progress`, opens a running time entry. Max 2 tasks "in progress with time tracking" at once — a 3rd returns a 422 (`"Active tasks with time tracking limit is reached"`). |
+| `start_without_tracking` | `pending → in_progress` without opening a time entry — use when the user wants a task marked active without the clock running. |
+| `stop_tracking` | `in_progress → pending`, pauses without completing. Use for "pause this task" / "stop tracking X" when the user isn't done with it. |
 | `finish` | Closes any open time entry (`end_time: now`) and marks the task `completed`. |
 
-**Do not use `event=stop_tracking` or `event=start_without_tracking` for tasks** — despite appearing in older docs, they are not implemented in the API and will cause a server error (500), not a clean error response. There is currently no API way to pause a task without finishing it; the only exposed transitions are start and finish.
+All four events are implemented and return the updated task on success, or a `422` with `{"errors": {...}}` on an invalid transition (e.g. `stop_tracking` on a task that isn't `in_progress`).
 
 ## Relationships
 

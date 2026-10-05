@@ -57,7 +57,17 @@ For building an SDK/integration rather than making a few calls, read `references
 These are real bugs/doc drift in TimeMagic itself, not skill errors — warn the user if they hit one:
 
 1. **Goals**: the documented `month` field does not exist on the model. The real field for both reading and writing is **`begin_date`**. `period` defaults to `week`, not `month`.
-2. **Tasks**: `event=stop_tracking` and `event=start_without_tracking` are documented but **not implemented** for tasks via the API — only `event=start_tracking` and `event=finish` exist. Calling the unimplemented events raises a server error (500), not a clean validation error. Don't use them; if the user asks for "pause a task" there's currently no API equivalent — only `finish`.
+
+## Workflow guidance
+
+For *how* to use these endpoints well as an agent — not just what they are — read:
+
+| File | Covers |
+|---|---|
+| `references/workflows.md` | Search-before-create, duplicate avoidance, natural-language duration parsing, handling ambiguous project/task references, destructive-action confirmation, composing multi-step requests |
+| `references/tool_usage.md` | How this skill's REST calls map onto the same operations exposed by the TimeMagic MCP server, for clients that prefer MCP tool-calling over raw HTTP |
+
+This is the single canonical source for TimeMagic AI workflow behavior - the TimeMagic application's own AI features (Bot Leopold, in web chat and Telegram) are instructed from a version-pinned copy of this exact file set, not a separately maintained prompt. If you find a workflow rule here that's wrong or missing, fixing it here is the complete fix - nothing else needs to be edited by hand.
 3. **Projects**: `project_type` actually accepts `tech_startup`, `creator`, `salary`, `other`, `outsource` (docs only mention two of these).
 4. **Tasks**: `GET /api/tasks` with no `project_id` is not supported — tasks must be listed via `GET /api/projects/:project_id/tasks`, or fetched individually via `GET /api/tasks/:id`, or via `GET /api/tasks/tracking` for active ones.
 
