@@ -35,6 +35,8 @@ their REST equivalent, for readers coming from one side or the other.
 | `get_week_goal` / `get_month_goal` | `GET /api/goals` + client-side `period` filter |
 | `get_goal_progress` | no single REST equivalent yet - combine `GET /api/goals` with the resource's time entries |
 | `update_goal` | `POST /api/goals` or `PUT /api/goals/:uuid` |
+| `get_daily_report` | no single REST equivalent yet - combine `GET /api/time_entries` for the day with `GET /api/tasks`/`GET /api/projects` to group by project/task |
+| `submit_feature_request` | no REST equivalent - MCP/Leopold-only, stored as internal feedback, not a TimeMagic domain resource |
 
 An MCP tool call that fails returns the same error shapes as the REST API (`{"errors": ...}` for
 `422`, not-found, etc.) inside the tool result, rather than a transport-level error - check the

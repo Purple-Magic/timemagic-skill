@@ -57,6 +57,19 @@ phrasing implies a different period (e.g. "yesterday I worked 47 minutes on X").
   both-valid records, but the direct log is what the user is asking for and avoids a timer
   blip appearing in their history.
 
+## Daily reports
+
+"How much did I work today?" / "what did I do yesterday?": use `get_daily_report` for the given
+date rather than manually summing time entries yourself - it already groups by project/task.
+Default to today when no date is given.
+
+## Feedback and feature requests
+
+"I wish TimeMagic could..." / "can you tell the team..." / "report a bug" (a request *about*
+TimeMagic itself, not a task/project/time action): use `submit_feature_request` with the user's
+own words as `description`, then confirm it was sent. Don't silently drop this kind of message as
+small talk, and don't require a minimum length before offering to submit it.
+
 ## Duplicate / already-exists requests
 
 "Create X" when X already exists by name: treat like any other search-before-create case - tell
