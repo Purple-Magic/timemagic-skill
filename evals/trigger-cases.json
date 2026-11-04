@@ -10,7 +10,9 @@
     "Integrate this Rails app with the TimeMagic API.",
     "Get my TimeMagic time entries for today.",
     "Build a script that syncs TimeMagic tasks to a spreadsheet.",
-    "Stop tracking my current activity in TimeMagic."
+    "Stop tracking my current activity in TimeMagic.",
+    "Add AI context to my TimeMagic task about Google authentication.",
+    "Pick up my TimeMagic task and implement it using its AI Agent Context."
   ],
   "negative": [
     "Explain ActiveRecord callbacks.",

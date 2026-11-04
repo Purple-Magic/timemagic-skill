@@ -21,11 +21,11 @@ their REST equivalent, for readers coming from one side or the other.
 | `get_project` | `GET /api/projects/:uuid` |
 | `create_project` | `POST /api/projects` |
 | `update_project` | `PUT /api/projects/:uuid` |
-| `list_tasks` | `GET /api/projects/:project_id/tasks` (or `GET /api/tasks/:uuid` for one) |
-| `search_tasks` | same, + client-side name filter |
-| `get_task` | `GET /api/tasks/:uuid` |
-| `create_task` | `POST /api/projects/:project_id/tasks` |
-| `update_task` | `PUT /api/tasks/:uuid` |
+| `list_tasks` | `GET /api/projects/:project_id/tasks` (or `GET /api/tasks/:uuid` for one). Over MCP each task carries only a `has_ai_context` flag, not the text; REST returns the full `ai_context` |
+| `search_tasks` | same, + client-side name filter (also `has_ai_context` only over MCP) |
+| `get_task` | `GET /api/tasks/:uuid` (returns the full `ai_context`) |
+| `create_task` | `POST /api/projects/:project_id/tasks` (optional `ai_context`) |
+| `update_task` | `PUT /api/tasks/:uuid` (`ai_context`: omit = keep, string = replace, empty string = clear) |
 | `start_tracking` / `start_without_tracking` / `stop_tracking` / `switch_tracking` / `complete_task` | `PUT /api/tasks/:uuid?event=start_tracking` / `start_without_tracking` / `stop_tracking` / `switch_tracking` / `finish` |
 | `get_current_activity` | `GET /api/tasks/tracking` |
 | `list_activities` | `GET /api/activities` |

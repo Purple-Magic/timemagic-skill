@@ -17,11 +17,21 @@ Once installed, you can ask Claude Code or Codex things like:
 - "Show my active TimeMagic projects."
 - "Create a task in my Website Redesign project."
 - "What have I tracked today?"
+- "Create a task for the Google sign-in work and add AI context with the Devise constraints."
+- "Implement my 'Google authentication' TimeMagic task." (the skill reads the task's AI Agent Context itself)
 - "Start tracking time on my 'Write report' task."
 - "List my TimeMagic goals for this month."
 - "Build a Ruby script that syncs TimeMagic tasks into a spreadsheet."
 
 It works both for driving your own TimeMagic account and for writing third-party integrations against the TimeMagic API.
+
+## AI Agent Context
+
+TimeMagic tasks have an optional **AI Agent Context** (`ai_context`): Markdown with the detailed instructions an AI agent needs for a task, kept separate from the short human-facing description. The skill:
+
+- **asks** whether you want to add AI context whenever it creates a task (you can write it, have it drafted from the conversation, or decline), and whenever it edits a task (keep, review, extend, replace, or remove the existing context) — unless you already said what you want;
+- **reads** the context automatically when you ask it to work on a task, and treats it as task data, not as instructions that override its own rules;
+- **never overwrites or erases** existing context unless you chose to; updates that don't mention it leave it untouched.
 
 ## Requirements
 

@@ -116,6 +116,46 @@ else
   errors << 'skills/timemagic/scripts/timemagic_request.rb does not exist'
 end
 
+# 8. AI Agent Context: the default ask-first workflows and the API contract stay documented
+skill_text = skill_md.exist? ? skill_md.read : ''
+workflows_text = ROOT.join('skills/timemagic/references/workflows.md').read
+tasks_text = ROOT.join('skills/timemagic/references/tasks.md').read
+tool_usage_text = ROOT.join('skills/timemagic/references/tool_usage.md').read
+
+{
+  'SKILL.md' => [skill_text, ['AI Agent Context on tasks', 'Creating a task: ask first', 'Editing a task: ask first',
+                              'Never silently overwrite or erase', 'ai_context']],
+  'references/workflows.md' => [workflows_text, ['## AI Agent Context', 'When you create a task: ask',
+                                                 'When you edit a task: ask', 'When you work on a task: read it',
+                                                 'Would you like to add AI Agent Context', 'batch-level',
+                                                 'Never silently overwrite or erase existing context']],
+  'references/tasks.md' => [tasks_text, ['`ai_context`', 'omitted key = preserved', '"ai_context": null']],
+  'references/tool_usage.md' => [tool_usage_text, ['has_ai_context', 'ai_context']]
+}.each do |file, (text, needles)|
+  needles.each do |needle|
+    errors << "#{file} must mention #{needle.inspect} (AI Agent Context workflow)" unless text.include?(needle)
+  end
+end
+
+# Every JSON payload example in tasks.md must be valid JSON (```json blocks and `{"task": ...}` request lines)
+tasks_text.scan(/```json\n(.*?)\n```/m).flatten.each do |block|
+  JSON.parse(block.gsub('...', 'x'))
+rescue JSON::ParserError => e
+  errors << "references/tasks.md has an invalid ```json example: #{e.message[0, 80]}"
+end
+tasks_text.scan(/^\{"task": .*\}$/).each do |line|
+  JSON.parse(line.gsub('...', 'x'))
+rescue JSON::ParserError => e
+  errors << "references/tasks.md has an invalid request body example: #{e.message[0, 80]}"
+end
+
+# The version is a plain three-number release and matches the plugin manifest
+version = ROOT.join('VERSION').read.strip
+errors << "VERSION #{version.inspect} is not a three-number version" unless version.match?(/\A\d+\.\d+\.\d+\z/)
+if plugin_json.exist? && (manifest_version = JSON.parse(plugin_json.read)['version']) && manifest_version != version
+  errors << "plugin.json version #{manifest_version} does not match VERSION #{version}"
+end
+
 if errors.empty?
   puts 'All checks passed.'
   exit 0
