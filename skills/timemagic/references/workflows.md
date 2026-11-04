@@ -92,6 +92,29 @@ TimeMagic itself, not a task/project/time action): use `submit_feature_request` 
 own words as `description`, then confirm it was sent. Don't silently drop this kind of message as
 small talk, and don't require a minimum length before offering to submit it.
 
+## TimeMagic bugs and missing features
+
+Offer to file a feature request (or bug report) when either of these happens:
+
+- **You find a bug in TimeMagic itself**: API and public page/UI disagree, a write silently
+  changes other fields, a response contradicts the docs, a documented field is missing, a record
+  changes without any request from you, etc. (Do not offer this for ordinary user errors such as
+  a bad token or a validation error caused by your own request.)
+- **The user wants something TimeMagic cannot do**: a field, endpoint, workflow or UI behaviour
+  that doesn't exist (for example structured hour/price fields on tasks).
+
+What to do:
+
+1. Finish or safely stop the current task first; say plainly what happened and what you verified.
+2. **Ask the user** whether they want to submit a feature request containing the finding. Never
+   submit one without their yes.
+3. On yes, use `submit_feature_request` if the MCP tool is available, with the user's own wording
+   plus the details. There is no REST equivalent; without MCP, write the report as a ready-to-paste
+   prompt or issue text instead (see `tool_usage.md`) and hand it to the user.
+4. Make the report self-contained: real IDs (project, estimation/task/etc. UUIDs), expected vs.
+   actual behaviour, a timeline of the requests you made (and anything that changed without
+   them), API-vs-UI differences, and how to reproduce. No tokens or other secrets.
+
 ## Duplicate / already-exists requests
 
 "Create X" when X already exists by name: treat like any other search-before-create case - tell
