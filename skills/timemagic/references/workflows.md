@@ -42,22 +42,46 @@ phrasing implies a different period (e.g. "yesterday I worked 47 minutes on X").
 Task-specific information lives in the **tasks**; the estimation holds only what is common to the
 whole estimation. Never duplicate per-task content in the estimation description.
 
+**Hours and prices must be in `task.estimation`, never only in the task description.** The public
+estimation page and `estimation.data` (hours, sums, totals) are built from each task's
+`estimation` field. Hours written into a task `description` are not read, so the estimation shows
+0 tasks and `0m / $0.00`.
+
+Recipe: create a whole estimation via the API
+
 1. Search-before-create applies (see above): check existing tasks and estimations in the project
    (including similarly-titled ones) first, and reuse matching tasks instead of duplicating them.
-2. Create one task per piece of work (`POST /api/projects/:project_id/tasks`). Put everything about
-   that piece of work in the task itself: description, deliverables, acceptance criteria,
-   dependencies, and its hours and price (the API has no structured estimate fields for tasks, so
-   write them in the task description, e.g. `Оценка: 3 ч — $72.`).
-3. Create the estimation (`POST /api/projects/:project_id/estimations`) with `task_uuids` linking
-   those tasks. Its `description` holds only estimation-wide things: scope/purpose, currency and
-   rate, overall total, external costs, exclusions, assumptions, risks, and any coefficients. Do
-   **not** list the tasks, their hours/prices, deliverables or acceptance criteria there. A one-line
-   pointer such as "details are in the task descriptions" is fine.
-4. Verify by reading the estimation back: it belongs to the right project, links every task, and
-   the task hours/prices sum to the stated total.
-5. When updating an estimation with `PUT`, always send the full set of fields you want to keep
-   (`title`, `description`, `task_uuids`, dates). A partial body containing only `description` was
-   observed to reset the title and clear `task_uuids`; read the result back and restore if needed.
+2. Create one task per piece of work (`POST /api/projects/:project_id/tasks`) with
+   `"estimation": "3h"` (`"1h 30m"`, `"90m"` and `"1:30"` are also accepted). Put the rest of the
+   task-specific content in the task `description`: what is done, deliverables, acceptance
+   criteria, dependencies. Repeating the hours and price in the description text is optional and
+   never a substitute for `estimation`.
+3. Create the estimation (`POST /api/projects/:project_id/estimations`) with `title`,
+   `description` and `task_uuids`. Its `description` holds only estimation-wide things: scope and
+   purpose, currency and rate, overall total, external costs, exclusions, assumptions, risks,
+   coefficients. Do **not** list the tasks, their hours/prices, deliverables or acceptance
+   criteria there. A one-line pointer such as "details are in the task descriptions" is fine.
+4. Verify (`GET /api/estimations/:uuid`) and do not report the work as done until this passes:
+   - `len(task_uuids)` equals `len(data.tasks)`, and every task you linked is in `data.tasks`;
+   - `data.total_estimation` and `data.total_estimation_sum` are non-zero and match the sum you
+     intended;
+   - the public page `https://<host>/public/estimations/<uuid>` shows every task.
+   If `task_uuids` and `data.tasks` disagree, some task has no `estimation`: fix the task, re-check,
+   and tell the user about any remaining discrepancy instead of declaring success.
+
+Updating an estimation: `PUT /api/estimations/:uuid` is partial; only the keys you send change, so
+`{"estimation": {"description": "..."}}` is safe. `task_uuids`, when sent, replace the whole set
+(`[]` unlinks everything), so to change the tasks send the complete list. `data` is computed by the
+server from the linked tasks and cannot be written via the API; no manual recalculation is needed.
+Changing a task's `estimation` is reflected the next time the estimation is read; verify as in step 4.
+
+Rate limit: the API allows **5 requests per minute per user**. An estimation of 15 tasks needs 15
+task creates + 1 estimation create + verification reads, so spread the work over several minutes
+(about 13 s between calls, or batches of 5 with a pause), and on `429` wait before retrying.
+Skipping this produces `429`s and half-created data.
+
+Source of truth for the API: `docs/api/AGENTS.md` in the TimeMagic repository (also published at
+`https://time-app.purple-magic.com/docs/api`). If it disagrees with this file, trust it.
 
 ## Starting and stopping work
 

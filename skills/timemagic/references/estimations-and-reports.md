@@ -19,7 +19,8 @@ Build a time/roadmap estimate from a set of a project's tasks.
 ## Where information goes
 
 Per-task information (description, deliverables, acceptance criteria, dependencies, hours, price)
-belongs in the **tasks**, not in the estimation. The estimation `description` is only for things
+belongs in the **tasks**, not in the estimation. Hours and prices go in `task.estimation`; the
+page and `data` read them from there, not from the description. The estimation `description` is only for things
 common to the whole estimation (scope, rate/currency, total, external costs, exclusions,
 assumptions). See `workflows.md` → "Creating estimations".
 
@@ -28,7 +29,7 @@ assumptions). See `workflows.md` → "Creating estimations".
 - `GET /api/projects/:project_id/estimations` — list for a project.
 - `GET /api/estimations/:uuid` — single estimation.
 - `POST /api/projects/:project_id/estimations` — body `{"estimation": {"title": "...", "description": "...", "starts_at": "2025-10-01", "ends_at": "2025-10-15", "task_uuids": ["<task_uuid>"]}}`.
-- `PUT /api/estimations/:uuid` — field updates (send `title`, `description` and `task_uuids` together; a partial body was observed to reset the title and clear `task_uuids`), or `?event=calculate_roadmap` (no body) to trigger calculation.
+- `PUT /api/estimations/:uuid` — partial field updates: only the keys you send change, and `task_uuids`, when sent, replaces the whole set (`[]` unlinks all). `data` is recomputed by the server and is not writable. Or `?event=calculate_roadmap` (no body) to trigger calculation.
   - Requires `starts_at`, `ends_at`, at least one task, and the project to have `working_hours_per_day` set — otherwise `422` (`"Estimation roadmap cannot be calculated"`).
 - `DELETE /api/estimations/:uuid` — `204 No Content`.
 

@@ -11,6 +11,7 @@ Belong to a project. Drive time tracking via workflow events.
 | `description` | string, nullable | |
 | `status` | string | `pending`, `in_progress`, `completed`, `archived` (only `start`/`complete` events are API-exposed, see below) |
 | `task_type` | string | `default` or `permanent` |
+| `estimation` | string, nullable | time estimate, writable on POST/PUT: `"3h"`, `"1h 30m"`, `"90m"` or `"1:30"`. Returned normalized; `null` when there is none. Estimation pages and `estimation.data` (hours, sums) are built from it, so set it for any task that belongs to an estimation |
 | `data` | object, nullable | |
 | `project_uuid` | string | |
 | `created_at` / `updated_at` | string, ISO-8601 | |
@@ -20,7 +21,7 @@ Belong to a project. Drive time tracking via workflow events.
 - `GET /api/projects/:project_id/tasks` — tasks for a project. **There is no `GET /api/tasks` collection endpoint** — always nest under a project, or use `:id`/`tracking` below.
 - `GET /api/tasks/:uuid` — single task.
 - `GET /api/tasks/tracking` — the user's tasks that currently have an active (running) time entry. Good for "what am I tracking right now?".
-- `POST /api/projects/:project_id/tasks` — body `{"task": {"name": "...", "description": "...", "task_type": "default"}}`.
+- `POST /api/projects/:project_id/tasks` — body `{"task": {"name": "...", "description": "...", "task_type": "default", "estimation": "3h"}}`.
 - `PUT /api/tasks/:uuid` — body `{"task": {...}}` for field updates, or use `event` (see below) for workflow transitions. Don't mix both in one call.
 - `DELETE /api/tasks/:uuid` — `204 No Content`.
 
