@@ -1,6 +1,6 @@
 # TimeMagic Skill
 
-The official [Agent Skill](https://github.com/anthropics/skills) for [TimeMagic](https://time-app.purple-magic.com) — gives Claude Code and OpenAI Codex everything they need to read and manage your projects, tasks, activities, goals, time entries, estimations, and reports through the TimeMagic API, without you having to paste in docs every time.
+The official [Agent Skill](https://github.com/anthropics/skills) for [TimeMagic](https://time-app.purple-magic.com) — gives Claude Code and OpenAI Codex everything they need to read and manage your projects, tasks, activities, goals, time entries, estimations, reports, and feature requests through the TimeMagic API, without you having to paste in docs every time.
 
 ## Install (Claude Code + Codex, one command)
 

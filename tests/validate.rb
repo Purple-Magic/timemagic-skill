@@ -40,7 +40,7 @@ end
 # 2. Required reference files exist
 %w[
   authentication.md projects.md tasks.md activities.md goals.md
-  time-entries.md estimations-and-reports.md errors-and-limits.md
+  time-entries.md estimations-and-reports.md feature-requests.md errors-and-limits.md
 ].each do |name|
   path = ROOT.join('skills/timemagic/references', name)
   errors << "missing reference file: #{name}" unless path.exist?

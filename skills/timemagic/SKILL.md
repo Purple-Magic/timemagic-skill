@@ -1,6 +1,6 @@
 ---
 name: timemagic
-description: Interact with the TimeMagic API — a personal time-tracking and productivity app with projects, tasks, activities, goals, time entries, estimations, and reports. Use when the user asks to view/create/update TimeMagic projects, tasks, activities, goals, or time entries, to start/stop time tracking, to check what they tracked, or to build/integrate code against the TimeMagic API (https://time-app.purple-magic.com). Not for generic to-do lists or unrelated time-tracking tools.
+description: Interact with the TimeMagic API — a personal time-tracking and productivity app with projects, tasks, activities, goals, time entries, estimations, reports, and feature requests. Use when the user asks to view/create/update TimeMagic projects, tasks, activities, goals, or time entries, to start/stop time tracking, to check what they tracked, or to build/integrate code against the TimeMagic API (https://time-app.purple-magic.com). Not for generic to-do lists or unrelated time-tracking tools.
 license: MIT
 ---
 
@@ -48,6 +48,7 @@ Load only what you need for the task at hand:
 | `references/goals.md` | Goal CRUD, user vs. project goals, **`begin_date` field correction** (not `month`) |
 | `references/time-entries.md` | Time entry CRUD, attaching to a task/activity |
 | `references/estimations-and-reports.md` | Project estimations (roadmap calculation) and reports |
+| `references/feature-requests.md` | Feature request CRUD (description writable, status read-only) |
 | `references/errors-and-limits.md` | Full error/status catalog, rate limiting, subscription gate details |
 
 For building an SDK/integration rather than making a few calls, read `references/errors-and-limits.md` plus every resource file you'll wrap, and mirror the "Client Guidance" notes in each.
