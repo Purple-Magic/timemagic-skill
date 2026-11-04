@@ -37,6 +37,28 @@ takes ISO-8601 datetimes/seconds, not free text. When only a duration is given w
 time, assume "ending now" (`end_time` = now, `begin_time` = now - duration) unless the user's
 phrasing implies a different period (e.g. "yesterday I worked 47 minutes on X").
 
+## Creating estimations
+
+Task-specific information lives in the **tasks**; the estimation holds only what is common to the
+whole estimation. Never duplicate per-task content in the estimation description.
+
+1. Search-before-create applies (see above): check existing tasks and estimations in the project
+   (including similarly-titled ones) first, and reuse matching tasks instead of duplicating them.
+2. Create one task per piece of work (`POST /api/projects/:project_id/tasks`). Put everything about
+   that piece of work in the task itself: description, deliverables, acceptance criteria,
+   dependencies, and its hours and price (the API has no structured estimate fields for tasks, so
+   write them in the task description, e.g. `Оценка: 3 ч — $72.`).
+3. Create the estimation (`POST /api/projects/:project_id/estimations`) with `task_uuids` linking
+   those tasks. Its `description` holds only estimation-wide things: scope/purpose, currency and
+   rate, overall total, external costs, exclusions, assumptions, risks, and any coefficients. Do
+   **not** list the tasks, their hours/prices, deliverables or acceptance criteria there. A one-line
+   pointer such as "details are in the task descriptions" is fine.
+4. Verify by reading the estimation back: it belongs to the right project, links every task, and
+   the task hours/prices sum to the stated total.
+5. When updating an estimation with `PUT`, always send the full set of fields you want to keep
+   (`title`, `description`, `task_uuids`, dates). A partial body containing only `description` was
+   observed to reset the title and clear `task_uuids`; read the result back and restore if needed.
+
 ## Starting and stopping work
 
 - "Start working on X" / "start tracking X": resolve X (see above), then start tracking.
