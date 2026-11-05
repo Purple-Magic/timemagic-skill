@@ -40,7 +40,7 @@ end
 # 2. Required reference files exist
 %w[
   authentication.md projects.md tasks.md activities.md goals.md
-  time-entries.md estimations-and-reports.md feature-requests.md errors-and-limits.md
+  time-entries.md estimations-and-reports.md feature-requests.md trash.md errors-and-limits.md
 ].each do |name|
   path = ROOT.join('skills/timemagic/references', name)
   errors << "missing reference file: #{name}" unless path.exist?
@@ -108,6 +108,16 @@ ROOT.glob('**/*').each do |path|
   end
 end
 
+# 7a. Trash helper script is syntactically valid and its tests pass
+trash_script = ROOT.join('skills/timemagic/scripts/timemagic_trash.rb')
+if trash_script.exist?
+  system('ruby', '-c', trash_script.to_s, out: File::NULL) || errors << 'timemagic_trash.rb fails `ruby -c` syntax check'
+  system('ruby', ROOT.join('tests/trash_script_test.rb').to_s, out: File::NULL, err: File::NULL) ||
+    errors << 'tests/trash_script_test.rb fails'
+else
+  errors << 'skills/timemagic/scripts/timemagic_trash.rb does not exist'
+end
+
 # 7. Helper script is syntactically valid Ruby
 script = ROOT.join('skills/timemagic/scripts/timemagic_request.rb')
 if script.exist?
@@ -134,6 +144,22 @@ tool_usage_text = ROOT.join('skills/timemagic/references/tool_usage.md').read
 }.each do |file, (text, needles)|
   needles.each do |needle|
     errors << "#{file} must mention #{needle.inspect} (AI Agent Context workflow)" unless text.include?(needle)
+  end
+end
+
+# 9. Trash: the three operations stay distinct and the safety rules stay documented
+trash_text = ROOT.join('skills/timemagic/references/trash.md').read
+{
+  'SKILL.md' => [skill_text, ['## Trash: deleted items', '**Read**', '**Restore**', '**Recreate**',
+                              'untrusted user data', 'references/trash.md']],
+  'references/trash.md' => [trash_text, ['Three different operations', 'untrusted_user_authored_data',
+                                         'Do not touch the original', 'Search before creating', 'creatable_fields',
+                                         '--confirmed', 'no such operation', 'GET /api/trash', 'restore']],
+  'references/workflows.md' => [workflows_text, ['## Trash: deleted items', 'offer** recreate']],
+  'references/tool_usage.md' => [tool_usage_text, %w[list_trash get_trashed_item export_trashed_task restore_trashed_item]]
+}.each do |file, (text, needles)|
+  needles.each do |needle|
+    errors << "#{file} must mention #{needle.inspect} (Trash workflow)" unless text.include?(needle)
   end
 end
 

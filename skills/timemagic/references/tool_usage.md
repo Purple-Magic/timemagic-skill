@@ -36,6 +36,10 @@ their REST equivalent, for readers coming from one side or the other.
 | `get_goal_progress` | no single REST equivalent yet - combine `GET /api/goals` with the resource's time entries |
 | `update_goal` | `POST /api/goals` or `PUT /api/goals/:uuid` |
 | `get_daily_report` | no single REST equivalent yet - combine `GET /api/time_entries` for the day with `GET /api/tasks`/`GET /api/projects` to group by project/task |
+| `list_trash` | `GET /api/trash` (filters `type`, `project_uuid`, `query`, `page`, `per_page`; read-only) |
+| `get_trashed_item` | `GET /api/trash/:type/:uuid` (read-only; a deleted task includes `description` and `ai_context`) |
+| `export_trashed_task` | `GET /api/trash/task/:uuid/export` (read-only; `?variant=mcp` for the MCP tool-result shape; over MCP also returns `structuredContent`) |
+| `restore_trashed_item` | `POST /api/trash/:type/:uuid/restore` (changes data - only on the user's explicit request; recreating has no tool: export, then `search_tasks` + `create_task`) |
 | `submit_feature_request` | `POST /api/feature_requests` (list/get/update/delete: `GET /api/feature_requests[/:uuid]`, `PUT`/`DELETE /api/feature_requests/:uuid` - REST only, no MCP tool) |
 
 An MCP tool call that fails returns the same error shapes as the REST API (`{"errors": ...}` for

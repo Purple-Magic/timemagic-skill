@@ -10,6 +10,7 @@
 | 401 | missing/invalid token | `{"errors": "Unauthorized"}` |
 | 402 | GET without active subscription | `{"info": "Subscription required for GET requests."}` |
 | 404 | not found / not owned by this user | `{"errors": "Not found"}` |
+| 409 | Trash restore refused because the item was already restored or another restore is running (see `trash.md`) | `{"errors": {"category": "...", "message": "..."}}` |
 | 422 | validation failure | `{"errors": {"<field>": ["<message>", ...]}}` (standard Rails `errors.as_json`) |
 | 429 | rate limit exceeded | `{"info": "Rate limit exceeded. Try again later."}` |
 | 500 | server error — e.g. hitting an unimplemented `event` value (see `tasks.md`) | opaque, not a clean API error |

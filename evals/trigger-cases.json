@@ -12,7 +12,15 @@
     "Build a script that syncs TimeMagic tasks to a spreadsheet.",
     "Stop tracking my current activity in TimeMagic.",
     "Add AI context to my TimeMagic task about Google authentication.",
-    "Pick up my TimeMagic task and implement it using its AI Agent Context."
+    "Pick up my TimeMagic task and implement it using its AI Agent Context.",
+    "Show me my deleted tasks in TimeMagic.",
+    "Find the TimeMagic task I deleted last month.",
+    "Show the AI context of this deleted TimeMagic task.",
+    "Restore this deleted TimeMagic task.",
+    "Export this deleted TimeMagic task for another AI agent.",
+    "Recreate this deleted TimeMagic task because it can't be restored.",
+    "Find deleted TimeMagic tasks from project Website Redesign.",
+    "Show me everything in my TimeMagic Trash."
   ],
   "negative": [
     "Explain ActiveRecord callbacks.",
@@ -20,6 +28,8 @@
     "What time is it in Tokyo?",
     "Write me a cron job to back up a Postgres database.",
     "Help me plan my vacation itinerary.",
-    "Summarize this PDF for me."
+    "Summarize this PDF for me.",
+    "Restore my laptop from a Time Machine backup.",
+    "How do I empty the Trash on macOS?"
   ]
 }
