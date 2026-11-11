@@ -20,7 +20,10 @@
     "Export this deleted TimeMagic task for another AI agent.",
     "Recreate this deleted TimeMagic task because it can't be restored.",
     "Find deleted TimeMagic tasks from project Website Redesign.",
-    "Show me everything in my TimeMagic Trash."
+    "Show me everything in my TimeMagic Trash.",
+    "Publish this vertical demo video to my YouTube Shorts channel through TimeMagic.",
+    "Schedule this video for YouTube Shorts with TimeMagic PubMagic.",
+    "Upload this MP4 to PubMagic and create a private draft."
   ],
   "negative": [
     "Explain ActiveRecord callbacks.",
@@ -30,6 +33,8 @@
     "Help me plan my vacation itinerary.",
     "Summarize this PDF for me.",
     "Restore my laptop from a Time Machine backup.",
-    "How do I empty the Trash on macOS?"
+    "How do I empty the Trash on macOS?",
+    "Upload this file to my Google Drive.",
+    "How do I edit a YouTube video's thumbnail in YouTube Studio?"
   ]
 }

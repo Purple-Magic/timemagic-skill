@@ -40,7 +40,7 @@ end
 # 2. Required reference files exist
 %w[
   authentication.md projects.md tasks.md activities.md goals.md
-  time-entries.md estimations-and-reports.md feature-requests.md trash.md errors-and-limits.md
+  time-entries.md estimations-and-reports.md feature-requests.md trash.md pubmagic.md errors-and-limits.md
 ].each do |name|
   path = ROOT.join('skills/timemagic/references', name)
   errors << "missing reference file: #{name}" unless path.exist?
@@ -173,6 +173,21 @@ tasks_text.scan(/^\{"task": .*\}$/).each do |line|
   JSON.parse(line.gsub('...', 'x'))
 rescue JSON::ParserError => e
   errors << "references/tasks.md has an invalid request body example: #{e.message[0, 80]}"
+end
+
+# 10. PubMagic: the restricted feature and its safety rules stay documented
+pubmagic_text = ROOT.join('skills/timemagic/references/pubmagic.md').read
+{
+  'SKILL.md' => [skill_text, ['## PubMagic', 'explicitly approves', 'browser-only', 'references/pubmagic.md']],
+  'references/pubmagic.md' => [pubmagic_text, ['restricted feature', 'Never publish without the user', 'confirm', 'allow_duplicate',
+                                               'made_for_kids', 'contains_synthetic_media', 'private', '404', 'integer',
+                                               'Never answer the declarations yourself']],
+  'references/tool_usage.md' => [tool_usage_text, %w[list_pubmagic_accounts create_pubmagic_media_asset
+                                                     create_pubmagic_publication request_pubmagic_publication]]
+}.each do |file, (text, needles)|
+  needles.each do |needle|
+    errors << "#{file} must mention #{needle.inspect} (PubMagic)" unless text.include?(needle)
+  end
 end
 
 # The version is a plain three-number release and matches the plugin manifest

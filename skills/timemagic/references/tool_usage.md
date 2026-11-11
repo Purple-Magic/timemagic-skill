@@ -45,3 +45,16 @@ their REST equivalent, for readers coming from one side or the other.
 An MCP tool call that fails returns the same error shapes as the REST API (`{"errors": ...}` for
 `422`, not-found, etc.) inside the tool result, rather than a transport-level error - check the
 result content before assuming success.
+
+PubMagic tools (restricted: listed only for users TimeMagic has allowed; see `references/pubmagic.md` for the safety rules - publish only after explicit approval):
+
+| MCP tool | REST equivalent |
+|---|---|
+| `list_pubmagic_accounts` | `GET /api/pubmagic/accounts` (never returns credentials) |
+| `list_pubmagic_media_assets` | `GET /api/pubmagic/media_assets` |
+| `create_pubmagic_media_asset` | `POST /api/pubmagic/media_assets` (base64, max 25 MB over MCP; multipart over REST) |
+| `list_pubmagic_publications` | `GET /api/pubmagic/publications?status=` |
+| `get_pubmagic_publication` | `GET /api/pubmagic/publications/:id` |
+| `create_pubmagic_publication` | `POST /api/pubmagic/publications` (draft only; nothing is sent to YouTube) |
+| `update_pubmagic_publication` | `PATCH /api/pubmagic/publications/:id` (draft/failed only) |
+| `request_pubmagic_publication` | `POST /api/pubmagic/publications/:id/publish` (preview unless `confirm: true`; `allow_duplicate` for reposts) |

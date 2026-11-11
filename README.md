@@ -25,8 +25,13 @@ Once installed, you can ask Claude Code or Codex things like:
 - "Show me my deleted tasks." / "Find the task I deleted last month." / "Show everything in Trash." (read-only)
 - "Restore this deleted task." (brings the original back; the server rolls back and keeps it in Trash if it no longer works)
 - "Recreate this deleted task because it can't be restored." (makes a new task from the saved data; the original stays in Trash)
+- "Publish this vertical video to my YouTube Shorts channel." / "Schedule it for Friday." (PubMagic, allowed users only; the skill shows a preview and publishes only after your explicit approval)
 
 It works both for driving your own TimeMagic account and for writing third-party integrations against the TimeMagic API.
+
+## PubMagic
+
+PubMagic publishes a vertical video to the user's connected YouTube channel through the official YouTube Data API. It is a restricted feature: only users TimeMagic has allowed can use it (everyone else gets `404`). The skill keeps the safety rules: publish only after explicit approval of the exact video, channel, title and visibility (preview first, then `confirm: true`), the user answers the kids/synthetic-media declarations, visibility defaults to private, and connecting the channel stays browser-only. Details: `skills/timemagic/references/pubmagic.md`.
 
 ## Trash
 
