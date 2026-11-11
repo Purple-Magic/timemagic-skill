@@ -13,6 +13,7 @@ Belong to a project. Drive time tracking via workflow events.
 | `status` | string | `pending`, `in_progress`, `completed`, `archived` (only `start`/`complete` events are API-exposed, see below) |
 | `task_type` | string | `default` or `permanent` |
 | `estimation` | string, nullable | time estimate, writable on POST/PUT: `"3h"`, `"1h 30m"`, `"90m"` or `"1:30"`. Returned normalized; `null` when there is none. Estimation pages and `estimation.data` (hours, sums) are built from it, so set it for any task that belongs to an estimation |
+| `deadline` | string, nullable, ISO-8601 | task deadline, read-only (cannot be set through the API); `null` when there is none |
 | `data` | object, nullable | |
 | `project_uuid` | string | |
 | `created_at` / `updated_at` | string, ISO-8601 | |
@@ -35,7 +36,7 @@ POST /api/projects/<project_uuid>/tasks
 {"task": {"name": "Implement Google authentication", "description": "Allow users to sign in with Google.", "ai_context": "Use the existing Devise infrastructure.\nDo not add another auth framework.\nRun the auth specs after changes."}}
 ```
 ```json
-{"uuid": "...", "name": "Implement Google authentication", "description": "Allow users to sign in with Google.", "ai_context": "Use the existing Devise infrastructure.\n...", "status": "pending", "task_type": "default", "project_uuid": "...", "estimation": null}
+{"uuid": "...", "name": "Implement Google authentication", "description": "Allow users to sign in with Google.", "ai_context": "Use the existing Devise infrastructure.\n...", "status": "pending", "task_type": "default", "project_uuid": "...", "estimation": null, "deadline": null}
 ```
 
 | Goal | Request body for `PUT /api/tasks/:uuid` | Result |
