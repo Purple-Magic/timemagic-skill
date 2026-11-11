@@ -35,7 +35,7 @@ Every request carries `X-TimeMagic-API-Version` (the API contract version the sk
 
 ## PubMagic
 
-PubMagic publishes a vertical video to the user's connected YouTube channel through the official YouTube Data API. It is a restricted feature: only users TimeMagic has allowed can use it (everyone else gets `404`). The skill keeps the safety rules: publish only after explicit approval of the exact video, channel, title and visibility (preview first, then `confirm: true`), the user answers the kids/synthetic-media declarations, visibility defaults to private, and connecting the channel stays browser-only. Details: `skills/timemagic/references/pubmagic.md`.
+PubMagic publishes a vertical video to the user's connected YouTube channel through the official YouTube Data API. It is a restricted feature: only users TimeMagic has allowed can use it (everyone else gets `404`). The skill keeps the safety rules: publish only after explicit approval of the exact video, channel, title and visibility (preview first, then `confirm: true`), the user answers the kids/synthetic-media declarations, visibility defaults to private, and connecting the channel stays browser-only. A video can carry an optional preview image (cover); YouTube applies it after the upload, and only for verified channels. Details: `skills/timemagic/references/pubmagic.md`.
 
 ## Trash
 

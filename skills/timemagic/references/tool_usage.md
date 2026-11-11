@@ -55,6 +55,6 @@ PubMagic tools (restricted: listed only for users TimeMagic has allowed; see `re
 | `create_pubmagic_media_asset` | `POST /api/pubmagic/media_assets` (base64, max 25 MB over MCP; multipart over REST) |
 | `list_pubmagic_publications` | `GET /api/pubmagic/publications?status=` |
 | `get_pubmagic_publication` | `GET /api/pubmagic/publications/:id` |
-| `create_pubmagic_publication` | `POST /api/pubmagic/publications` (draft only; nothing is sent to YouTube) |
-| `update_pubmagic_publication` | `PATCH /api/pubmagic/publications/:id` (draft/failed only) |
+| `create_pubmagic_publication` | `POST /api/pubmagic/publications` (draft only; nothing is sent to YouTube; optional preview image: `thumbnail_base64` + `thumbnail_content_type`, REST: multipart `thumbnail`) |
+| `update_pubmagic_publication` | `PATCH /api/pubmagic/publications/:id` (draft/failed only; can add or replace the preview image) |
 | `request_pubmagic_publication` | `POST /api/pubmagic/publications/:id/publish` (preview unless `confirm: true`; `allow_duplicate` for reposts) |

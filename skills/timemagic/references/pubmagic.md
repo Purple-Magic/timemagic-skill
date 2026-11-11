@@ -38,7 +38,7 @@ Use it when the user asks to upload/publish/schedule a video to YouTube Shorts t
    {"social_account_id": 1, "media_asset_id": 1, "title": "Short title (max 100)", "description": "What the video shows.", "tags": ["tag1", "tag2"], "privacy": "private", "made_for_kids": false, "contains_synthetic_media": false}
    ```
 
-   Optional: `notify_subscribers`, `scheduled_at` (ISO 8601). `made_for_kids` and `contains_synthetic_media` are required answers from the user. Returns `{"publication": {"id", "status": "draft", ...}}`. A draft or failed publication can be edited with `PATCH /api/pubmagic/publications/:id` (same fields). After it is queued or uploaded it can no longer be edited through the API - changes then happen in YouTube Studio.
+   Optional: `notify_subscribers`, `scheduled_at` (ISO 8601), and a **preview image** (cover, see "Preview image" below). `made_for_kids` and `contains_synthetic_media` are required answers from the user. Returns `{"publication": {"id", "status": "draft", ...}}`. A draft or failed publication can be edited with `PATCH /api/pubmagic/publications/:id` (same fields). After it is queued or uploaded it can no longer be edited through the API - changes then happen in YouTube Studio.
 4. **Publishing** - `POST /api/pubmagic/publications/:id/publish`.
    - Without `"confirm": true` it is a **preview**: it returns what would be sent, `blockers` and `duplicates`, and sends nothing. Do this first and show it to the user.
    - After the user explicitly approves, send `{"confirm": true}` (a JSON boolean). If the same video is already on that channel the call is refused until you also send `"allow_duplicate": true` - only when the user really wants a repost.
@@ -50,6 +50,25 @@ Use it when the user asks to upload/publish/schedule a video to YouTube Shorts t
 `draft` -> `queued` -> `uploading` -> `uploaded` -> `processing` -> `published` or `scheduled`; exits are `failed` and `requires_attention`. `uploaded` means YouTube accepted the bytes, **not** that the video is live: a background job checks YouTube about every 5 minutes, so `published` can take several minutes. Treat the video as published only when the status is `published` (or `scheduled` for a future `scheduled_at`), and give the user `shorts_url` / `youtube_url` from the response so they can verify it in YouTube Studio.
 
 `error_code` / `error_message` explain failures (quota is retried automatically hours later; rejected metadata is `failed`; a revoked Google authorization shows the account as `requires_reauth` - the user must press `Reconnect` at `/pubmagic`).
+
+## Preview image (cover)
+
+A publication can carry an optional preview image that YouTube shows as the video's cover. Use it when the user gives you an image for the video; never generate or pick one yourself, and ask if they want one only when it is natural to.
+
+- File: PNG, JPEG or GIF, **up to 2 MB** (1280x720, 16:9 recommended). Anything else is a `422`.
+- REST: send the draft as `multipart/form-data` with a `thumbnail` file field on `POST /api/pubmagic/publications` (or `PATCH .../:id` to add or replace it on a draft/failed publication). With multipart, send each tag as `tags[]` and booleans as `true`/`false` strings. Without a cover keep using the normal JSON body.
+
+  ```bash
+  curl -s -H "Authorization: Bearer $TIMEMAGIC_API_TOKEN" \
+    -F social_account_id=1 -F media_asset_id=1 -F "title=My Short" \
+    -F made_for_kids=false -F contains_synthetic_media=false \
+    -F "thumbnail=@cover.png;type=image/png" https://time-app.purple-magic.com/api/pubmagic/publications
+  ```
+
+- MCP: `create_pubmagic_publication` / `update_pubmagic_publication` take `thumbnail_base64` and `thumbnail_content_type` (`image/png`, `image/jpeg` or `image/gif`).
+- The publication response has `thumbnail` (boolean) and `thumbnail_status`: `none`, `pending` (will be sent after the video upload), `set`, or `failed`.
+- The cover is sent to YouTube **right after the video upload**, and it is best effort: YouTube only accepts custom covers for **verified channels**. If it refuses, the video is still uploaded and published, `thumbnail_status` is `failed`, and the user has to set the cover in YouTube Studio. Tell them that, do not retry the upload because of it.
+- Mention the cover in the approval summary (file name) together with video, channel, title and visibility.
 
 ## Scheduling
 
