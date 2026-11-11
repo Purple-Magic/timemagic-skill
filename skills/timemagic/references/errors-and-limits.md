@@ -12,6 +12,7 @@
 | 404 | not found / not owned by this user | `{"errors": "Not found"}` |
 | 409 | Trash restore refused because the item was already restored or another restore is running (see `trash.md`) | `{"errors": {"category": "...", "message": "..."}}` |
 | 422 | validation failure | `{"errors": {"<field>": ["<message>", ...]}}` (standard Rails `errors.as_json`) |
+| 426 | the skill's `X-TimeMagic-API-Version` is not supported by the API: the skill is out of date (checked before authentication) | `{"errors": "...", "code": "skill_update_required", "requested_api_version": "0", "supported_api_versions": ["1"], "current_api_version": "1", "update_url": "https://github.com/purple-magic/timemagic-skill"}` |
 | 429 | rate limit exceeded | `{"info": "Rate limit exceeded. Try again later."}` |
 | 500 | server error — e.g. hitting an unimplemented `event` value (see `tasks.md`) | opaque, not a clean API error |
 

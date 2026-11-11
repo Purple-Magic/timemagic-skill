@@ -2,7 +2,7 @@
   "name": "timemagic",
   "displayName": "TimeMagic",
   "description": "Official TimeMagic skill: lets Claude Code read and manage your TimeMagic projects, tasks, activities, goals, time entries, reports, and the Trash of deleted items via the TimeMagic API.",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "author": {
     "name": "Purple Magic",
     "url": "https://time-app.purple-magic.com"

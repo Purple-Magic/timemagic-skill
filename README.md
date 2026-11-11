@@ -29,6 +29,10 @@ Once installed, you can ask Claude Code or Codex things like:
 
 It works both for driving your own TimeMagic account and for writing third-party integrations against the TimeMagic API.
 
+## Versions and updates
+
+Every request carries `X-TimeMagic-API-Version` (the API contract version the skill was written for). If the TimeMagic API no longer supports it, it answers `426` with `code: skill_update_required`; the skill then tells you it must be updated and updates itself from this repository with `skills/timemagic/scripts/timemagic_update.rb` (`git pull --ff-only` in a checkout, otherwise a fresh copy of the files; `--check` only looks). Requests without the header are still accepted by the API.
+
 ## PubMagic
 
 PubMagic publishes a vertical video to the user's connected YouTube channel through the official YouTube Data API. It is a restricted feature: only users TimeMagic has allowed can use it (everyone else gets `404`). The skill keeps the safety rules: publish only after explicit approval of the exact video, channel, title and visibility (preview first, then `confirm: true`), the user answers the kids/synthetic-media declarations, visibility defaults to private, and connecting the channel stays browser-only. Details: `skills/timemagic/references/pubmagic.md`.

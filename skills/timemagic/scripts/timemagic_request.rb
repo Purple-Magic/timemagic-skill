@@ -14,6 +14,7 @@
 require 'net/http'
 require 'uri'
 require 'json'
+require_relative 'timemagic_client'
 
 def fail_with(message)
   warn message
@@ -46,8 +47,7 @@ request_class = {
 fail_with("Unsupported method: #{method}") unless request_class
 
 request = request_class.new(uri)
-request['Authorization'] = "Bearer #{token}"
-request['Accept'] = 'application/json'
+TimeMagicClient.apply_headers(request, token: token)
 
 if body
   request['Content-Type'] = 'application/json'
@@ -62,6 +62,11 @@ parsed = begin
   JSON.parse(response.body) if response.body && !response.body.empty?
 rescue JSON::ParserError
   response.body
+end
+
+if TimeMagicClient.update_required?(response.code, parsed)
+  warn TimeMagicClient.update_message(parsed)
+  exit 3
 end
 
 case response

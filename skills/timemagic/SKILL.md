@@ -17,8 +17,19 @@ All requests need:
 ```
 Authorization: Bearer <TIMEMAGIC_API_TOKEN>
 Accept: application/json
+X-TimeMagic-API-Version: 1       # the API contract version this skill was written for
 Content-Type: application/json   # for requests with a body
 ```
+
+`scripts/timemagic_request.rb` and `scripts/timemagic_trash.rb` already send all of these. If you call the API any other way (curl, MCP client, generated code), send `X-TimeMagic-API-Version: 1` yourself.
+
+## Skill and API versions (mandatory)
+
+The API compares `X-TimeMagic-API-Version` with the versions it supports. If it answers **`426`** with `"code": "skill_update_required"` (the scripts print `TIMEMAGIC SKILL UPDATE REQUIRED` and exit with status 3), this copy of the skill is out of date and may behave incorrectly. Do this, in order:
+
+1. Tell the user plainly that the skill must be updated because it is incompatible with the current TimeMagic API.
+2. Update it: `ruby <skill dir>/scripts/timemagic_update.rb` (a `git pull --ff-only` in a git checkout of https://github.com/purple-magic/timemagic-skill, otherwise a fresh copy of the skill files from that repository). `--check` only reports. If it fails, give the user `npx skills add purple-magic/timemagic-skill -g -a claude-code -a codex -y` instead.
+3. Re-read this SKILL.md and the references you need (they changed), then retry the original request once. Do not retry in a loop, and never work around the `426` by dropping the header.
 
 Get the token from the `TIMEMAGIC_API_TOKEN` environment variable. If it's not set, tell the user to generate one at `https://time-app.purple-magic.com/docs/api` (logged in → API Token section → "Regenerate token") and set it as `TIMEMAGIC_API_TOKEN`. Never ask the user to paste the token into chat, never print it, and never write it into source files you generate — reference the env var instead.
 

@@ -6,6 +6,8 @@
 Authorization: Bearer <api_token>
 ```
 
+Also send `X-TimeMagic-API-Version: 1`. It is optional for the API, but the skill always sends it so an incompatible skill gets a `426` telling it to update (see `errors-and-limits.md` and "Skill and API versions" in `SKILL.md`). Every response carries `X-TimeMagic-API-Version` (current) and `X-TimeMagic-App-Version` (running release).
+
 A legacy HTTP Token auth scheme is also accepted server-side, but `Bearer` is the documented and recommended form.
 
 ## Getting a token

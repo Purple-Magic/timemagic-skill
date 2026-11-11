@@ -20,6 +20,7 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'cgi'
+require_relative 'timemagic_client'
 
 # Pure request building, separated from I/O so it can be tested without a network.
 module TimeMagicTrash
@@ -126,18 +127,22 @@ def run_request(request)
 
   uri = URI.join(ENV.fetch('TIMEMAGIC_HOST', 'https://time-app.purple-magic.com'), request.path)
   http_request = (request.verb == 'POST' ? Net::HTTP::Post : Net::HTTP::Get).new(uri)
-  http_request['Authorization'] = "Bearer #{token}"
-  http_request['Accept'] = 'application/json'
+  TimeMagicClient.apply_headers(http_request, token: token)
   http_request['Content-Type'] = 'application/json'
 
   response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') { |http| http.request(http_request) }
   paging = response.each_header.to_h.select { |name, _| name.start_with?('x-') }
   warn "HTTP #{response.code} #{paging.map { |k, v| "#{k}=#{v}" }.join(' ')}".strip
-  puts(begin
-    JSON.pretty_generate(JSON.parse(response.body.to_s))
+  parsed = begin
+    JSON.parse(response.body.to_s)
   rescue JSON::ParserError
-    response.body
-  end)
+    nil
+  end
+  if TimeMagicClient.update_required?(response.code, parsed)
+    warn TimeMagicClient.update_message(parsed)
+    exit 3
+  end
+  puts(parsed ? JSON.pretty_generate(parsed) : response.body)
   exit(response.is_a?(Net::HTTPSuccess) ? 0 : 1)
 end
 
