@@ -33,7 +33,7 @@ their REST equivalent, for readers coming from one side or the other.
 | `create_payment` | `POST /api/projects/:project_id/payments` |
 | `update_payment` | `PUT /api/payments/:uuid` |
 | `delete_payment` | `DELETE /api/payments/:uuid` |
-| `list_tasks` | `GET /api/projects/:project_id/tasks` with optional `deadline_from`, `deadline_to`, `page`, `per_page` (see `references/tasks.md`, "Filtering by deadline"; or `GET /api/tasks/:uuid` for one). Over MCP each task carries only a `has_ai_context` flag, not the text; REST returns the full `ai_context` |
+| `list_tasks` | `GET /api/tasks` (all of the user's projects) or `GET /api/projects/:project_id/tasks`, with optional `deadline_from`, `deadline_to`, `page`, `per_page` (see `references/tasks.md`, "Filtering by deadline"; or `GET /api/tasks/:uuid` for one). Over MCP each task carries only a `has_ai_context` flag, not the text; REST returns the full `ai_context` |
 | `search_tasks` | same, + client-side name filter (also `has_ai_context` only over MCP) |
 | `get_task` | `GET /api/tasks/:uuid` (returns the full `ai_context`) |
 | `create_task` | `POST /api/projects/:project_id/tasks` (optional `ai_context`) |

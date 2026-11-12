@@ -84,7 +84,7 @@ All five events are implemented and return the updated task on success, or a `42
 
 ## Filtering by deadline and paging
 
-To find tasks due in a window (today, this week, overdue), do **not** list the whole project and filter locally. `GET /api/projects/:project_id/tasks` (MCP `list_tasks`) accepts:
+To find tasks due in a window (today, this week, overdue, "what should I work on next"), do **not** walk every project or list whole projects and filter locally. Use `GET /api/tasks` (all of the user's projects) or `GET /api/projects/:project_id/tasks` (one project); MCP `list_tasks` is the same, with an optional `project_uuid`. Both accept:
 
 | Param | Meaning |
 |---|---|
