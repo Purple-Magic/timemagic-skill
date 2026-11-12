@@ -36,9 +36,9 @@ their REST equivalent, for readers coming from one side or the other.
 | `list_tasks` | `GET /api/tasks` (all of the user's projects) or `GET /api/projects/:project_id/tasks`, with optional `deadline_from`, `deadline_to`, `page`, `per_page` (see `references/tasks.md`, "Filtering by deadline"; or `GET /api/tasks/:uuid` for one). Over MCP each task carries only a `has_ai_context` flag, not the text; REST returns the full `ai_context` |
 | `search_tasks` | same, + client-side name filter (also `has_ai_context` only over MCP) |
 | `get_task` | `GET /api/tasks/:uuid` (returns the full `ai_context`) |
-| `create_task` | `POST /api/projects/:project_id/tasks` (optional `ai_context`) |
+| `create_task` | `POST /api/projects/:project_id/tasks` (optional `ai_context`, `deadline`) |
 | `move_task` | `PUT /api/tasks/:uuid_or_identifier` with `{"task": {"project_uuid": "<uuid or prefix>"}}` (new identifier in the destination project; the old one keeps resolving) |
-| `update_task` | `PUT /api/tasks/:uuid` (`ai_context`: omit = keep, string = replace, empty string = clear) |
+| `update_task` | `PUT /api/tasks/:uuid` (`ai_context`: omit = keep, string = replace, empty string = clear; `deadline`: ISO-8601 datetime or bare date = end of day, empty string clears, omit = keep) |
 | `start_tracking` / `start_without_tracking` / `stop_tracking` / `switch_tracking` / `complete_task` | `PUT /api/tasks/:uuid?event=start_tracking` / `start_without_tracking` / `stop_tracking` / `switch_tracking` / `finish` |
 | `get_current_activity` | `GET /api/tasks/tracking` |
 | `list_activities` | `GET /api/activities` |
