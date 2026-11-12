@@ -82,6 +82,10 @@ All five events are implemented and return the updated task on success, or a `42
 - Belongs to a `project` (`project_uuid`).
 - Has many `time_entries` through the time-tracking workflow (`resource_type: "Task"`).
 
+## Finding a task by slug
+
+To find a task by its slug (`VIL-12`) use `GET /api/tasks?identifier=VIL-12` (MCP `list_tasks` with `identifier`). Case-insensitive, current or old identifiers; returns a list with 0 or 1 task, never an error. Do not search by name for a slug. `GET /api/tasks/VIL-12` returns the single task (404 if unknown).
+
 ## Filtering by deadline and paging
 
 To find tasks due in a window (today, this week, overdue, "what should I work on next"), do **not** walk every project or list whole projects and filter locally. Use `GET /api/tasks` (all of the user's projects) or `GET /api/projects/:project_id/tasks` (one project); MCP `list_tasks` is the same, with an optional `project_uuid`. Both accept:
