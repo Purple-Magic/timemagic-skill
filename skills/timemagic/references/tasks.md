@@ -81,3 +81,17 @@ All five events are implemented and return the updated task on success, or a `42
 
 - Belongs to a `project` (`project_uuid`).
 - Has many `time_entries` through the time-tracking workflow (`resource_type: "Task"`).
+
+## Filtering by deadline and paging
+
+To find tasks due in a window (today, this week, overdue), do **not** list the whole project and filter locally. `GET /api/projects/:project_id/tasks` (MCP `list_tasks`) accepts:
+
+| Param | Meaning |
+|---|---|
+| `deadline_from` | ISO-8601 date or datetime; tasks due at or after it |
+| `deadline_to` | ISO-8601 date or datetime; tasks due at or before it (a bare date covers the whole day) |
+| `page`, `per_page` | paging; `per_page` max 100, default 25 once paging is used |
+
+- When either deadline param is set, results are ordered by deadline ascending and tasks without a deadline are excluded. Overdue = only `deadline_to`; upcoming = `deadline_from` plus `deadline_to`.
+- Without `page`/`per_page` the full list is returned. With them, REST sends `X-Total-Count`, `X-Page`, `X-Per-Page`, `X-Total-Pages` headers; MCP returns `total_count`, `page`, `per_page`, `total_pages` in the result. Keep requesting pages until `page >= total_pages`.
+- A malformed date returns `422` with `{"errors": {"deadline_from": [...]}}`.
