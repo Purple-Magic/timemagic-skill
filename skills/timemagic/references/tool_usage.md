@@ -28,6 +28,11 @@ their REST equivalent, for readers coming from one side or the other.
 | `get_project` | `GET /api/projects/:uuid` |
 | `create_project` | `POST /api/projects` |
 | `update_project` | `PUT /api/projects/:uuid` |
+| `list_payments` | `GET /api/projects/:project_id/payments` (creator/outsource projects) |
+| `get_payment` | `GET /api/payments/:uuid` |
+| `create_payment` | `POST /api/projects/:project_id/payments` |
+| `update_payment` | `PUT /api/payments/:uuid` |
+| `delete_payment` | `DELETE /api/payments/:uuid` |
 | `list_tasks` | `GET /api/projects/:project_id/tasks` (or `GET /api/tasks/:uuid` for one). Over MCP each task carries only a `has_ai_context` flag, not the text; REST returns the full `ai_context` |
 | `search_tasks` | same, + client-side name filter (also `has_ai_context` only over MCP) |
 | `get_task` | `GET /api/tasks/:uuid` (returns the full `ai_context`) |

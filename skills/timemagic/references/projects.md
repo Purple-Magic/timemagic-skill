@@ -26,5 +26,5 @@ Top-level container for tasks, estimations, and reports; can also own goals.
 
 ## Relationships
 
-- Has many `tasks`, `estimations`, `reports`.
+- Has many `tasks`, `estimations`, `reports`, and (for `creator`/`outsource` projects only) `payments` — see `payments.md`.
 - Can have `goals` attached (`goalable_type: "Project"`) — see `goals.md`.

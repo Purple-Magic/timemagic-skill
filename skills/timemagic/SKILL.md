@@ -1,12 +1,12 @@
 ---
 name: timemagic
-description: Interact with the TimeMagic API — a personal time-tracking and productivity app with projects, tasks (including each task's AI Agent Context for coding agents), activities, goals, time entries, estimations, reports, feature requests, the Trash of deleted items (read, restore, or recreate deleted tasks), and PubMagic (publish or schedule a video to YouTube Shorts, for allowed users only). Use when the user asks to view/create/update TimeMagic projects, tasks, activities, goals, or time entries, to start/stop time tracking, to check what they tracked, to find, restore or recreate something they deleted, to upload, publish or schedule a video to YouTube Shorts through TimeMagic, or to build/integrate code against the TimeMagic API (https://time-app.purple-magic.com). Not for generic to-do lists or unrelated time-tracking tools.
+description: Interact with the TimeMagic API — a personal time-tracking and productivity app with projects, tasks (including each task's AI Agent Context for coding agents), activities, goals, time entries, estimations, reports, project payments (creator/outsource), feature requests, the Trash of deleted items (read, restore, or recreate deleted tasks), and PubMagic (publish or schedule a video to YouTube Shorts, for allowed users only). Use when the user asks to view/create/update TimeMagic projects, tasks, activities, goals, or time entries, to start/stop time tracking, to check what they tracked, to find, restore or recreate something they deleted, to upload, publish or schedule a video to YouTube Shorts through TimeMagic, or to build/integrate code against the TimeMagic API (https://time-app.purple-magic.com). Not for generic to-do lists or unrelated time-tracking tools.
 license: MIT
 ---
 
 # TimeMagic
 
-TimeMagic is a personal time-tracking and productivity app. Its external API lets you read and manage a user's **projects**, **tasks**, **activities**, **goals**, **time entries**, **estimations**, and **reports**, and drive time-tracking workflows (start/stop tracking on tasks and activities).
+TimeMagic is a personal time-tracking and productivity app. Its external API lets you read and manage a user's **projects**, **tasks**, **activities**, **goals**, **time entries**, **estimations**, **reports**, and the **payments** of creator and outsource projects, and drive time-tracking workflows (start/stop tracking on tasks and activities).
 
 Authoritative, always-current docs: `https://time-app.purple-magic.com/docs/api`. This skill's `references/` are a fast, offline-capable summary of that documentation cross-checked against the app's source — if something here seems off or the user mentions new fields/endpoints, treat the live docs as the source of truth.
 
@@ -100,6 +100,7 @@ Load only what you need for the task at hand:
 | `references/tasks.md` | Task identifiers (`DEV-42`), Task CRUD (including `ai_context` create/read/update/clear), nesting under projects, `tracking` endpoint, `start_tracking`/`start_without_tracking`/`stop_tracking`/`switch_tracking`/`finish` events |
 | `references/activities.md` | Activity CRUD, start/stop tracking events |
 | `references/goals.md` | Goal CRUD, user vs. project goals, **`begin_date` field correction** (not `month`) |
+| `references/payments.md` | Payments attached to `creator`/`outsource` projects: one-time vs monthly subscription, required fields, `source` rules, ending a subscription |
 | `references/time-entries.md` | Time entry CRUD, attaching to a task/activity |
 | `references/estimations-and-reports.md` | Project estimations (roadmap calculation) and reports |
 | `references/feature-requests.md` | Feature request CRUD (description writable, status read-only) |
