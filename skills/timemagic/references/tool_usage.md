@@ -10,6 +10,13 @@ TimeMagic exposes the same capabilities two ways:
    different set of permissions). Configure it as an MCP server in Claude Code/Codex if you'd
    rather have typed tool calls than hand-built HTTP requests.
 
+Task tools (`get_task`, `update_task`, `move_task`, `delete_task`, tracking tools, `complete_task`, and
+`get_trashed_item` / `restore_trashed_item` / `export_trashed_task` for tasks) take the task as
+`uuid`, which may also be its readable identifier such as `DEV-42` (current or historical). Every
+task in a result has `identifier`, `project_prefix`, `project_sequence_number`; projects have
+`identifier_prefix` and `show_task_identifiers` (`update_project` can change both). Project
+arguments accept the project uuid or its three-letter prefix.
+
 The workflow guidance in `references/workflows.md` applies identically either way - it describes
 *what to do*, independent of *how the call is shaped*. The table below maps MCP tool names to
 their REST equivalent, for readers coming from one side or the other.
@@ -25,6 +32,7 @@ their REST equivalent, for readers coming from one side or the other.
 | `search_tasks` | same, + client-side name filter (also `has_ai_context` only over MCP) |
 | `get_task` | `GET /api/tasks/:uuid` (returns the full `ai_context`) |
 | `create_task` | `POST /api/projects/:project_id/tasks` (optional `ai_context`) |
+| `move_task` | `PUT /api/tasks/:uuid_or_identifier` with `{"task": {"project_uuid": "<uuid or prefix>"}}` (new identifier in the destination project; the old one keeps resolving) |
 | `update_task` | `PUT /api/tasks/:uuid` (`ai_context`: omit = keep, string = replace, empty string = clear) |
 | `start_tracking` / `start_without_tracking` / `stop_tracking` / `switch_tracking` / `complete_task` | `PUT /api/tasks/:uuid?event=start_tracking` / `start_without_tracking` / `stop_tracking` / `switch_tracking` / `finish` |
 | `get_current_activity` | `GET /api/tasks/tracking` |

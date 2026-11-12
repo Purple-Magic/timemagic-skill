@@ -1,6 +1,9 @@
 {
   "skill": "timemagic",
   "positive": [
+    "Show DEV-42 in TimeMagic.",
+    "Complete DEV-42 and move DEV-43 to the Marketing project.",
+    "Restore the deleted task DEV-7 in TimeMagic.",
     "Show my active TimeMagic projects.",
     "Create a task in my Website Redesign project.",
     "What have I tracked today in TimeMagic?",

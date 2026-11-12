@@ -5,6 +5,15 @@ source for TimeMagic AI behavior - it's read by Claude/Codex via this skill, and
 TimeMagic's own assistant (Bot Leopold, in both the web chat and Telegram) through a
 version-pinned copy of this same repository. Fix a rule here once; every client picks it up.
 
+## Task identifiers (DEV-42)
+
+- A user message containing something shaped like `ABC-123` is almost always a task identifier: resolve it directly (`get_task` with `uuid: "ABC-123"`, or `GET /api/tasks/ABC-123`) instead of searching by text. If it 404s, say it doesn't exist on their account and offer a name search; don't guess another task.
+- Typical requests and the call they map to: "show DEV-42" → get_task; "update DEV-42 ..." → update_task (apply the AI-context question rules as usual); "complete DEV-42" → complete_task; "move DEV-42 to Marketing" → find the project (uuid or prefix) then move_task; "delete DEV-42" → confirm, then delete_task; "restore DEV-42" → restore_trashed_item (type `task`, only on explicit request); "find the task DEV-42" → get_task, falling back to search.
+- Present tasks as `DEV-42 — name` using the canonical `identifier` from the response. When the response identifier differs from what the user typed (renamed prefix, moved task), mention the current one once.
+- Keep using the identifier the user gave you in follow-up calls within the conversation; it stays valid after moves and prefix changes.
+- Identifiers exist in API/MCP even when the project hides them in the web UI (`show_task_identifiers: false`); that setting is not a reason to omit them from your answers unless the user asks you not to use them.
+- Changing a project's `identifier_prefix` or `show_task_identifiers` is a project update; confirm prefix changes (they change how every task is named) and surface validation errors verbatim.
+
 ## Search before you create
 
 Before `create_project`/`POST /api/projects` or `create_task`/`POST .../tasks`, search existing

@@ -7,6 +7,9 @@ Belong to a project. Drive time tracking via workflow events.
 | Field | Type | Notes |
 |---|---|---|
 | `uuid` | string | |
+| `identifier` | string | canonical readable identifier, e.g. `DEV-42` (current project prefix + number). Always present, even when the project hides identifiers in the web UI |
+| `project_prefix` | string | the project's current three-letter prefix, e.g. `DEV` |
+| `project_sequence_number` | integer | the task's number inside its project, e.g. `42` |
 | `name` | string, required | enforced at the model level |
 | `description` | string, nullable | short, human-facing summary of what needs to be done |
 | `ai_context` | string, nullable | optional Markdown with detailed instructions for AI agents working on the task (architecture, constraints, acceptance criteria, testing). Up to 200,000 characters, line breaks preserved. Returned by every task response (`GET` one, list, `tracking`, create, update); `null` when the task has none. Writable on POST/PUT. See "AI Agent Context" below |
@@ -18,13 +21,22 @@ Belong to a project. Drive time tracking via workflow events.
 | `project_uuid` | string | |
 | `created_at` / `updated_at` | string, ISO-8601 | |
 
+## Identifiers (`DEV-42`)
+
+- Anywhere a task is addressed by `:uuid`/`:id` you may send its identifier instead: `GET /api/tasks/DEV-42`, `PUT /api/tasks/DEV-42?event=finish`, `PUT /api/tasks/DEV-42` with `{"task": {...}}`, `DELETE /api/tasks/DEV-42`. Matching is case-insensitive (`dev-42`), scoped to the token's account.
+- `/api/projects/:project_id/tasks` also accepts the project's prefix (`/api/projects/DEV/tasks`) instead of its uuid.
+- **Historical identifiers resolve too**: after the project prefix changes `DEV` → `ENG`, or the task moves to another project, `DEV-42` still returns the same task, whose `identifier` is now the current one (`ENG-42` / `MKT-18`). Aliases are never given to another task.
+- **Move** a task: `PUT /api/tasks/DEV-42` with `{"task": {"project_uuid": "<project uuid or prefix>"}}` → the task gets the next number in the destination project (never a reused one, also when moving back) and the response carries the new `identifier`. Unknown project → `422`.
+- A trashed task keeps its identifier; `POST /api/trash/task/DEV-42/restore` brings it back with the same one.
+- `404` for an identifier that doesn't exist for this account (another user's identifiers are indistinguishable from nonexistent ones).
+
 ## Endpoints
 
 - `GET /api/projects/:project_id/tasks` — tasks for a project. **There is no `GET /api/tasks` collection endpoint** — always nest under a project, or use `:id`/`tracking` below.
-- `GET /api/tasks/:uuid` — single task.
+- `GET /api/tasks/:uuid` (or `GET /api/tasks/DEV-42`) — single task.
 - `GET /api/tasks/tracking` — the user's tasks that currently have an active (running) time entry. Good for "what am I tracking right now?".
 - `POST /api/projects/:project_id/tasks` — body `{"task": {"name": "...", "description": "...", "task_type": "default", "estimation": "3h", "ai_context": "..."}}` (`ai_context` optional; leave the key out for a task without it).
-- `PUT /api/tasks/:uuid` — body `{"task": {...}}` for field updates (partial: only the keys you send change), or use `event` (see below) for workflow transitions. Don't mix both in one call.
+- `PUT /api/tasks/:uuid` (or `:identifier`) — body `{"task": {...}}` for field updates (partial: only the keys you send change), or use `event` (see below) for workflow transitions. Don't mix both in one call.
 - `DELETE /api/tasks/:uuid` — `204 No Content`.
 
 ## AI Agent Context (`ai_context`)

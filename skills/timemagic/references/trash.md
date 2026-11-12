@@ -2,6 +2,8 @@
 
 Everything a user deletes in TimeMagic - **tasks, projects and activities** - lands in their Trash and stays there **indefinitely** (no expiry, no cleanup). Keeping an item is not a promise it can be restored: data that was valid when it was deleted can stop being valid later (its project is gone, validation rules changed, ...). That is why Trash has two very different ways back, and why you must never mix them up.
 
+Deleted tasks can be addressed by their readable identifier (`DEV-42`) wherever a task uuid is accepted (REST path, MCP `uuid` argument, `timemagic_trash.rb show|export|restore task DEV-42`). A restored task keeps its identifier; identifiers of deleted tasks are never reused.
+
 ## Three different operations - do not confuse them
 
 | Operation | What it does | Changes data? | Endpoint / MCP tool |

@@ -26,6 +26,7 @@ require_relative 'timemagic_client'
 module TimeMagicTrash
   TYPES = %w[task project activity].freeze
   UUID = /\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/
+  IDENTIFIER = /\A[A-Za-z]{3}-\d+\z/ # task identifier such as DEV-42 (tasks only)
   USAGE = <<~TEXT
     Usage:
       timemagic_trash.rb list [--type TYPE] [--project UUID] [--query TEXT] [--page N] [--per-page N]
@@ -75,7 +76,7 @@ module TimeMagicTrash
   def export_request(args)
     flags = parse_flags(args, boolean_flags: %w[--mcp])
     uuid = flags[:positional].first
-    raise UsageError, 'export needs a task UUID' unless uuid&.match?(UUID)
+    raise UsageError, 'export needs a task UUID or identifier' unless uuid&.match?(UUID) || uuid&.match?(IDENTIFIER)
 
     variant = flags['--mcp'] ? '?variant=mcp' : ''
 
@@ -95,7 +96,9 @@ module TimeMagicTrash
   def identify(args)
     type, uuid = args
     raise UsageError, "Unsupported or missing type: #{type.inspect}" unless TYPES.include?(type)
-    raise UsageError, "Invalid UUID: #{uuid.inspect}" unless uuid&.match?(UUID)
+    unless uuid&.match?(UUID) || (type == 'task' && uuid&.match?(IDENTIFIER))
+      raise UsageError, "Invalid UUID: #{uuid.inspect}"
+    end
 
     [type, uuid]
   end

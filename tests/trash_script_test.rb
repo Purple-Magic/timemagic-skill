@@ -41,6 +41,17 @@ class TrashScriptTest < Minitest::Test
     assert_raises(TimeMagicTrash::UsageError) { build('show', '../users', UUID) }
   end
 
+  def test_tasks_can_be_addressed_by_identifier
+    assert_equal '/api/trash/task/DEV-42', build('show', 'task', 'DEV-42').path
+    assert_equal 'POST', build('restore', 'task', 'DEV-42', '--confirmed').verb
+    assert_equal '/api/trash/task/DEV-42/export', build('export', 'DEV-42').path
+  end
+
+  def test_identifiers_are_only_valid_for_tasks
+    assert_raises(TimeMagicTrash::UsageError) { build('show', 'project', 'DEV-42') }
+    assert_raises(TimeMagicTrash::UsageError) { build('show', 'task', 'DEV-42/../x') }
+  end
+
   def test_export_is_a_read_and_mcp_is_a_variant
     assert_equal "/api/trash/task/#{UUID}/export", build('export', UUID).path
     assert_equal "/api/trash/task/#{UUID}/export?variant=mcp", build('export', UUID, '--mcp').path

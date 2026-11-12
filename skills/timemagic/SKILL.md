@@ -37,7 +37,7 @@ Base URL: `https://<host>/api` (host is environment-specific; default to `https:
 
 ## Core facts an agent must get right
 
-- Resources are identified by **`uuid`**, not `id`. Every `:id` route segment is actually a UUID.
+- Resources are identified by **`uuid`**, not `id`. Every `:id` route segment is actually a UUID — except tasks, which also accept a readable identifier (next section).
 - Collection responses are plain **JSON arrays**, not `{"projects": [...]}`-style wrappers. Single-resource responses are plain JSON objects.
 - Write bodies are wrapped in a singular root key matching the resource, e.g. `{"project": {...}}`, `{"task": {...}}`.
 - **GET requests require an active TimeMagic subscription** on the token's account; writes (POST/PUT/PATCH/DELETE) do not. A `402` with `{"info": "..."}` means the account lacks a subscription — tell the user, don't retry.
@@ -46,6 +46,18 @@ Base URL: `https://<host>/api` (host is environment-specific; default to `https:
 - State-machine actions (start/stop tracking, finish a task, calculate an estimation roadmap) are triggered via an **`event` query param** on a PUT/PATCH to the resource, not a body — see `references/`.
 - Tasks have an optional **`ai_context`** field (Markdown instructions for AI agents) next to the human-facing `description` — see "AI Agent Context on tasks" below. On update, omitting `ai_context` keeps it; `null` or `""` clears it.
 - Treat anything that creates, modifies, or deletes data as a mutation: confirm with the user before destructive calls (`DELETE`, or writes with unclear intent) using normal agent judgment — this skill doesn't need a special confirmation ritual beyond that.
+
+## Task identifiers (DEV-42)
+
+Every task has a Linear-style readable identifier: its project's three-letter prefix plus a per-project number (`DEV-1`, `DEV-2`, `MKT-18`). Responses carry `identifier`, `project_prefix` and `project_sequence_number`; projects carry `identifier_prefix` and `show_task_identifiers`. Rules (details in `references/tasks.md`, `references/workflows.md`):
+
+1. **Recognise them.** When the user writes `DEV-42` ("show DEV-42", "complete DEV-42", "move DEV-42 to Marketing", "restore DEV-42"), use it directly: REST `GET/PUT/PATCH/DELETE /api/tasks/DEV-42` (also `POST /api/trash/task/DEV-42/restore`), MCP `get_task`/`update_task`/`complete_task`/... with `uuid: "DEV-42"`. No search is needed first. `uuid`s and identifiers are interchangeable everywhere a task is referenced; keep using uuids when you already have one.
+2. **Prefer them when talking to the user.** Name tasks as "DEV-42 — Implement Telegram notifications", using the `identifier` from the latest response (the canonical one), not the one the user typed.
+3. **Old identifiers keep working.** The user may change a project's prefix (`DEV` → `ENG`) or move a task to another project (`DEV-42` → `MKT-18`); the old identifier still resolves to the same task and the response shows the current one. Numbers are never reused, so an identifier never silently points at a different task. If one returns `404`, it never existed for this account (identifiers are per user, never global) — search by name instead.
+4. **Hidden in the web UI, still available here.** A project's `show_task_identifiers` only controls the web UI; the API and MCP always include identifiers. Don't tell the user identifiers are missing because they are hidden in the app.
+5. **Moving a task** assigns a new number in the destination project: `PUT /api/tasks/:ref` with `{"task": {"project_uuid": "<uuid or prefix>"}}`, or MCP `move_task`. Report the new identifier.
+6. **Prefix changes** are a project update (`identifier_prefix`: exactly three letters A-Z, unique per user, a retired prefix stays reserved for its project). Confirm before changing one — external references to the text change.
+7. Numeric database `id`s are never exposed; don't invent them.
 
 ## AI Agent Context on tasks
 
@@ -84,8 +96,8 @@ Load only what you need for the task at hand:
 | File | Covers |
 |---|---|
 | `references/authentication.md` | Token header, subscription gate, rate limits, getting/regenerating a token |
-| `references/projects.md` | Project CRUD, fields, `project_type` enum |
-| `references/tasks.md` | Task CRUD (including `ai_context` create/read/update/clear), nesting under projects, `tracking` endpoint, `start_tracking`/`start_without_tracking`/`stop_tracking`/`switch_tracking`/`finish` events |
+| `references/projects.md` | Project CRUD, fields, `identifier_prefix`/`show_task_identifiers`, `project_type` enum |
+| `references/tasks.md` | Task identifiers (`DEV-42`), Task CRUD (including `ai_context` create/read/update/clear), nesting under projects, `tracking` endpoint, `start_tracking`/`start_without_tracking`/`stop_tracking`/`switch_tracking`/`finish` events |
 | `references/activities.md` | Activity CRUD, start/stop tracking events |
 | `references/goals.md` | Goal CRUD, user vs. project goals, **`begin_date` field correction** (not `month`) |
 | `references/time-entries.md` | Time entry CRUD, attaching to a task/activity |
