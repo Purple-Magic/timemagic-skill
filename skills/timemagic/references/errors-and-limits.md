@@ -26,7 +26,8 @@ Note the two different error envelopes: `errors` for auth/not-found/validation, 
 ## Rate limits
 
 - 5 requests/minute per user, app-level (`Rails.cache` counter), no rate-limit headers.
-- Pace bulk operations; a 429 means wait, not retry-immediately.
+- Pace bulk operations (~1 request per 12 seconds); a 429 means wait at least a minute, not retry-immediately.
+- Plan within this budget: count the calls a job needs up front, prefer calls that return more data, never run TimeMagic calls in parallel (see "Respect the rate limit when planning work" in `SKILL.md`).
 
 ## General conventions
 

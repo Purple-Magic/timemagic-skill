@@ -59,6 +59,16 @@ Every task has a Linear-style readable identifier: its project's three-letter pr
 6. **Prefix changes** are a project update (`identifier_prefix`: exactly three letters A-Z, unique per user, a retired prefix stays reserved for its project). Confirm before changing one — external references to the text change.
 7. Numeric database `id`s are never exposed; don't invent them.
 
+## Respect the rate limit when planning work (mandatory)
+
+The API allows only **5 requests per minute per user** (about one every 12 seconds; see `references/errors-and-limits.md`). Treat this as a budget when you plan, not something to discover from a `429`:
+
+1. **Count before you start.** Estimate how many API calls a job needs (N creates + N updates + reads) and tell the user if it exceeds ~5; say roughly how long it will take (`calls / 5` minutes).
+2. **Spend calls wisely.** Prefer one call that returns more (`GET /api/tasks` across all projects, filters, `identifier=`) over many small ones. Don't re-fetch what you already have, and don't verify every write with a follow-up GET.
+3. **Pace and batch.** Space requests out (~12 s apart for long runs) and split big jobs into groups of up to 5 calls per minute, reporting progress between groups.
+4. **On `429`, wait** at least a minute before retrying; never retry immediately or in a loop.
+5. **Don't parallelize** TimeMagic calls (no parallel tool calls or subagents hitting the API).
+
 ## AI Agent Context on tasks
 
 Every task has two text fields for two readers: `description` is the short, human-facing summary of what the user needs to do; **`ai_context`** is optional Markdown for AI agents that will work on the task (architecture, relevant files, conventions, constraints, acceptance criteria, testing, decisions already made). Keep them separate: don't copy the description into `ai_context`, and don't bury long implementation instructions in `description`. These rules are mandatory; the details and wording are in `references/workflows.md` ("AI Agent Context"):
